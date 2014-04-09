@@ -57,8 +57,8 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  */
 class Application
 {
-    private $commands = array();
-    private $wantHelps = false;
+    protected $commands = array();
+    protected $wantHelps = false;
     private $runningCommand;
     private $name;
     private $version;

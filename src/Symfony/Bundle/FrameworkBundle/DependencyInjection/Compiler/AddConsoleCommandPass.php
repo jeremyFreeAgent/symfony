@@ -25,6 +25,8 @@ class AddConsoleCommandPass implements CompilerPassInterface
     {
         $commandServices = $container->findTaggedServiceIds('console.command');
 
+        $commandLazyables = array();
+
         foreach ($commandServices as $id => $tags) {
             $definition = $container->getDefinition($id);
 
@@ -42,8 +44,14 @@ class AddConsoleCommandPass implements CompilerPassInterface
                 throw new \InvalidArgumentException(sprintf('The service "%s" tagged "console.command" must be a subclass of "Symfony\\Component\\Console\\Command\\Command".', $id));
             }
             $container->setAlias('console.command.'.strtolower(str_replace('\\', '_', $class)), $id);
-        }
 
+            foreach ($tags as $tag) {
+                if (array_key_exists('commandName', $tag)) {
+                    $commandLazyables[$tag['commandName']] = $id;
+                }
+            }
+        }
         $container->setParameter('console.command.ids', array_keys($commandServices));
+        $container->setParameter('console.command.lazyables', $commandLazyables);
     }
 }
