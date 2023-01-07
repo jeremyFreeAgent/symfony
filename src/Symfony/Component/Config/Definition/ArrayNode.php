@@ -191,6 +191,15 @@ class ArrayNode extends BaseNode implements PrototypeNodeInterface
         $this->children[$name] = $node;
     }
 
+    public function getPath(): string
+    {
+        if (null !== $this->parent) {
+            return $this->parent->getPath().($this->name ? $this->pathSeparator.$this->name : '[]');
+        }
+
+        return $this->name ?? '[]';
+    }
+
     /**
      * @throws UnsetKeyException
      * @throws InvalidConfigurationException if the node doesn't have enough children

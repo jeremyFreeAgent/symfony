@@ -153,6 +153,18 @@ class PrototypedArrayNode extends ArrayNode
         throw new Exception('A prototyped array node cannot have concrete children.');
     }
 
+    public function getPath(): string
+    {
+        $indexPath = '['.$this->getKeyAttribute() .']';
+
+        if (null !== $this->parent) {
+            return $this->parent->getPath().($this->name ? $this->pathSeparator.$this->name : '').$indexPath;
+        }
+
+        // Root prototype node should never have an empty path
+        return $this->name ?? $indexPath;
+    }
+
     protected function finalizeValue(mixed $value): mixed
     {
         if (false === $value) {
